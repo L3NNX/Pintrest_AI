@@ -8,7 +8,7 @@
     "url": "https://github.com/L3NNX/Pintrest_AI.git"
   },
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node server.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1161.0",
