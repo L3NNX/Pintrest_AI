@@ -8,3 +8,4 @@ yarn-error.log*
 public/images/uploads/*
 !public/images/uploads/.gitkeep
 
+MEMORY.txt
