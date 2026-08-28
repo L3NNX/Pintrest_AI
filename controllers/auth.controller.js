@@ -11,10 +11,7 @@ const register = (req, res) => {
   const { username, email, fullname, password } = req.body;
 
   if (!username || !email || !fullname || !password) {
-    if (req.xhr || req.path.startsWith('/api/')) {
-      return res.status(400).json({ error: 'All fields are required' });
-    }
-    return res.redirect('/');
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   const userData = new User({ username, email, fullname });
@@ -22,25 +19,19 @@ const register = (req, res) => {
   User.register(userData, password)
     .then((registeredUser) => {
       passport.authenticate('local')(req, res, () => {
-        if (req.xhr || req.path.startsWith('/api/')) {
-          return res.status(201).json({
-            message: 'User registered successfully',
-            user: {
-              id: registeredUser._id,
-              username: registeredUser.username,
-              fullname: registeredUser.fullname,
-              email: registeredUser.email,
-            },
-          });
-        }
-        res.redirect('/profile');
+        res.status(201).json({
+          message: 'User registered successfully',
+          user: {
+            id: registeredUser._id,
+            username: registeredUser.username,
+            fullname: registeredUser.fullname,
+            email: registeredUser.email,
+          },
+        });
       });
     })
     .catch((err) => {
-      if (req.xhr || req.path.startsWith('/api/')) {
-        return res.status(400).json({ error: err.message });
-      }
-      res.redirect('/');
+      res.status(400).json({ error: err.message });
     });
 };
 
@@ -48,18 +39,15 @@ const register = (req, res) => {
  * Handle user login
  */
 const login = (req, res) => {
-  if (req.xhr || req.path.startsWith('/api/')) {
-    return res.json({
-      message: 'Logged in successfully',
-      user: {
-        id: req.user._id,
-        username: req.user.username,
-        fullname: req.user.fullname,
-        email: req.user.email,
-      },
-    });
-  }
-  res.redirect('/profile');
+  res.json({
+    message: 'Logged in successfully',
+    user: {
+      id: req.user._id,
+      username: req.user.username,
+      fullname: req.user.fullname,
+      email: req.user.email,
+    },
+  });
 };
 
 /**
@@ -68,10 +56,7 @@ const login = (req, res) => {
 const logout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
-    if (req.xhr || req.path.startsWith('/api/')) {
-      return res.json({ message: 'Logged out successfully' });
-    }
-    res.redirect('/');
+    res.json({ message: 'Logged out successfully' });
   });
 };
 
@@ -83,7 +68,7 @@ const getMe = async (req, res) => {
     const user = await User.findOne({ username: req.session.passport.user })
       .populate('posts')
       .select('-hash -salt');
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -114,4 +99,3 @@ module.exports = {
   getMe,
   getAuthStatus,
 };
-

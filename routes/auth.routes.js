@@ -4,24 +4,20 @@ const passport = require('passport');
 const authController = require('../controllers/auth.controller');
 const { isLoggedIn } = require('../middlewares/auth.middleware');
 
-// Web / SSR authentication endpoints
+// Register endpoint
+router.post('/api/auth/register', authController.register);
 router.post('/register', authController.register);
 
-router.post(
-  '/login',
-  passport.authenticate('local', {
-    successRedirect: '/profile',
-    failureRedirect: '/login',
-    failureFlash: true,
-  }),
-  authController.login
-);
+// Login endpoint
+router.post('/api/auth/login', passport.authenticate('local'), authController.login);
+router.post('/login', passport.authenticate('local'), authController.login);
 
+// Logout endpoint
+router.get('/api/auth/logout', authController.logout);
 router.get('/logout', authController.logout);
 
-// REST API endpoints
+// User profile & auth status
 router.get('/api/auth/status', authController.getAuthStatus);
 router.get('/api/me', isLoggedIn, authController.getMe);
 
 module.exports = router;
-
