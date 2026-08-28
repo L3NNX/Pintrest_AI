@@ -1,11 +1,10 @@
 require('dotenv').config();
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const expressSession = require('express-session');
-const flash = require('connect-flash');
 const passport = require('passport');
 
 const connectDB = require('./config/db');
@@ -17,12 +16,7 @@ connectDB();
 
 const app = express();
 
-// View engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(flash());
-
+// Session & Authentication
 app.use(
   expressSession({
     resave: false,
@@ -40,32 +34,35 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Mount application routes
+// Mount API and auth routes
 app.use('/', mainRouter);
 
-// Catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
+// Serve compiled React SPA if built
+const clientDist = path.join(__dirname, 'client/dist');
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+
+  // SPA fallback for frontend client routing
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
+
+// 404 handler for API routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Endpoint not found' });
 });
 
-// Global error handler
+// Global JSON error handler
 app.use((err, req, res, next) => {
-  // If API request, respond with JSON
-  if (req.path.startsWith('/api/') || req.xhr) {
-    return res.status(err.status || 500).json({
-      error: err.message || 'Internal Server Error',
-    });
-  }
-
-  // Set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // Render error page
-  res.status(err.status || 500);
-  res.render('error');
+  console.error('Server error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+  });
 });
 
 module.exports = app;
