@@ -22,12 +22,12 @@ const getPresignedUrl = async (req, res) => {
 };
 
 /**
- * Upload image buffer directly to R2 and create post (for existing SSR profile form)
+ * Upload image buffer directly to R2 and create post
  */
 const uploadBufferAndCreatePost = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).send('No file uploaded');
+      return res.status(400).json({ error: 'No file uploaded' });
     }
 
     // Upload buffer to Cloudflare R2
@@ -47,10 +47,13 @@ const uploadBufferAndCreatePost = async (req, res) => {
     user.posts.push(post._id);
     await user.save();
 
-    res.redirect('/profile');
+    res.status(201).json({
+      message: 'Post created successfully',
+      post,
+    });
   } catch (err) {
     console.error('Buffer upload to R2 failed:', err);
-    res.status(500).send('Failed to upload image to Cloudflare R2');
+    res.status(500).json({ error: 'Failed to upload image to Cloudflare R2' });
   }
 };
 
@@ -58,4 +61,3 @@ module.exports = {
   getPresignedUrl,
   uploadBufferAndCreatePost,
 };
-
