@@ -41,9 +41,12 @@ const createPost = async (req, res) => {
     user.posts.push(post._id);
     await user.save();
 
+    // Populate user so frontend gets full user object immediately
+    const populatedPost = await Post.findById(post._id).populate('user', 'username fullname dp');
+
     res.status(201).json({
       message: 'Post created successfully',
-      post,
+      post: populatedPost,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
