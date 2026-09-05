@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T15:00:00Z",
+  "title": "Design System: Pintrest AI",
+  "extensions": {
+    "colorMeta": {
+      "ground":        { "role": "neutral", "displayName": "Ground Cream",   "canonical": "#faf8f4", "tonalRamp": ["#3a3731","#6e695f","#a59e91","#d5cebf","#faf8f4","#fbfaf7","#fdfdfc","#ffffff"] },
+      "ink":           { "role": "neutral", "displayName": "Ink Black",     "canonical": "#1a1816", "tonalRamp": ["#080706","#1a1816","#2d2926","#47423d","#6e6760","#999086","#c9c3bb","#eceae7"] },
+      "rule":          { "role": "neutral", "displayName": "Rule Hairline", "canonical": "#e2ddd7", "tonalRamp": ["#423f3b","#706c66","#a39e97","#cfcac3","#e2ddd7","#ede9e4","#f6f4f1","#faf8f6"] },
+      "accent":        { "role": "primary", "displayName": "Action Red",    "canonical": "#e60023", "tonalRamp": ["#4a0009","#7a0012","#aa001a","#d40020","#e60023","#ff1a3a","#ff6680","#ffb3bf"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Playfair Display for profile name and modal headlines." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles in Playfair Display." },
+      "title":    { "displayName": "Title",    "purpose": "Pin captions in Playfair Display." },
+      "body":     { "displayName": "Body",     "purpose": "UI and system font for reading copy and controls." },
+      "label":    { "displayName": "Label",    "purpose": "Metadata, timestamps, and usernames." }
+    },
+    "shadows": [
+      { "name": "modal-lift", "value": "0 24px 48px -12px rgba(26, 24, 22, 0.25)", "purpose": "Dialog overlays." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Standard editorial easing." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "narrative": {
+    "northStar": "The Editorial Magazine Grid",
+    "overview": "Pintrest AI presents itself as a curated visual culture publication — Monocle, Kinfolk, and art catalogue sensibilities brought to a real-time web application. The ground is a warm editorial cream (#faf8f4), hairlines dividers (#e2ddd7) provide structural poise without heavy borders, and titles are typeset in Playfair Display. The Pinterest red (#e60023) is preserved strictly as the primary commitment signal: the Save button and Log In CTA.",
+    "keyCharacteristics": [
+      "Warm cream background (#faf8f4) with warm ink type (#1a1816)",
+      "Playfair Display serif for headlines and pin captions; clean system sans for UI copy",
+      "1px hairline dividers (#e2ddd7) replacing heavy grey outlines",
+      "Pill-shaped controls and 16px rounded card corners",
+      "Action red (#e60023) reserved exclusively for user commitment"
+    ],
+    "rules": [
+      { "name": "The One Red Rule", "body": "#e60023 appears on only the active commitment elements (Save, Log In, Liked heart).", "section": "colors" },
+      { "name": "The Editorial Ground Rule", "body": "The background is always warm cream (#faf8f4), never pure clinical #ffffff or grey #f4f4f5.", "section": "colors" }
+    ],
+    "dos": [
+      "Do use Playfair Display for captions and headers.",
+      "Do keep borders to 1px #e2ddd7 hairlines.",
+      "Do reserve #e60023 for primary CTAs.",
+      "Do use border-radius: var(--radius-pill) on interactive controls."
+    ],
+    "donts": [
+      "Don't add heavy drop shadows at rest.",
+      "Don't use cold clinical blue-greys on backgrounds.",
+      "Don't use gradient text or decorative banners."
+    ]
+  }
+}
