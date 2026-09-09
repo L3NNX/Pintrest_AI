@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Share2, MoreHorizontal } from 'lucide-react';
+import { Heart, Share2, Bookmark } from 'lucide-react';
 import type { Post } from '../types';
 
 interface PinCardProps {
@@ -27,91 +27,166 @@ export const PinCard: React.FC<PinCardProps> = ({ pin, onClick, onLike, currentU
 
   return (
     <div
+      className="pin-card"
       onClick={() => onClick(pin)}
-      className="group relative cursor-pointer break-inside-avoid mb-4 transition-transform duration-200"
+      style={{
+        cursor: 'pointer',
+        breakInside: 'avoid',
+        marginBottom: 20,
+        position: 'relative',
+      }}
     >
-      {/* Image Container */}
-      <div className="relative overflow-hidden rounded-2xl bg-zinc-100">
+      {/* Image container */}
+      <div
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          borderRadius: 'var(--radius-card)',
+          background: 'var(--rule)',
+        }}
+      >
+        {/* Skeleton */}
         {!imageLoaded && (
-          <div className="absolute inset-0 bg-zinc-200 animate-pulse" style={{ minHeight: '260px' }} />
+          <div className="skeleton" style={{ position: 'absolute', inset: 0, minHeight: 240 }} />
         )}
+
         <img
+          className="pin-img"
           src={pin.image}
-          alt={pin.imageText || 'Pin image'}
+          alt={pin.imageText || 'Pin'}
           loading="lazy"
           onLoad={() => setImageLoaded(true)}
-          className={`w-full object-cover rounded-2xl transition-all duration-300 group-hover:brightness-95 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+          style={{
+            opacity: imageLoaded ? 1 : 0,
+            transition: 'opacity 0.3s var(--ease)',
+          }}
         />
 
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-between pointer-events-none">
-          {/* Top Row: Save Button */}
-          <div className="flex justify-end pointer-events-auto">
+        {/* Hover overlay */}
+        <div
+          className="pin-overlay"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(26,24,22,0.22)',
+            borderRadius: 'var(--radius-card)',
+            padding: 12,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Top: Save */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', pointerEvents: 'auto' }}>
             <button
               onClick={handleSave}
-              className={`px-4 py-2.5 rounded-full font-bold text-sm shadow-md transition-all ${
-                isSaved
-                  ? 'bg-zinc-950 text-white hover:bg-black'
-                  : 'bg-[#e60023] text-white hover:bg-[#b8001c]'
-              }`}
+              style={{
+                background: isSaved ? 'var(--ink)' : 'var(--accent)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '8px 16px',
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                letterSpacing: '0.01em',
+              }}
             >
+              <Bookmark size={13} fill={isSaved ? '#fff' : 'none'} />
               {isSaved ? 'Saved' : 'Save'}
             </button>
           </div>
 
-          {/* Bottom Row: Actions */}
-          <div className="flex items-center justify-between pointer-events-auto">
+          {/* Bottom: Like + Share */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'auto' }}>
             <button
               onClick={handleLike}
-              className={`p-2 rounded-full shadow-md backdrop-blur-md transition-all flex items-center gap-1.5 text-xs font-semibold ${
-                isLiked
-                  ? 'bg-red-500 text-white'
-                  : 'bg-white/90 hover:bg-white text-zinc-900'
-              }`}
+              style={{
+                background: isLiked ? 'var(--accent)' : 'rgba(250,248,244,0.92)',
+                color: isLiked ? '#fff' : 'var(--ink)',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '7px 12px',
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+                transition: `background var(--dur-fast) var(--ease)`,
+              }}
             >
-              <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-              {pin.likes?.length > 0 && <span>{pin.likes.length}</span>}
+              <Heart size={13} fill={isLiked ? '#fff' : 'none'} />
+              {(pin.likes?.length ?? 0) > 0 && pin.likes.length}
             </button>
 
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigator.clipboard.writeText(pin.image);
-                }}
-                className="p-2 bg-white/90 hover:bg-white text-zinc-900 rounded-full shadow-md backdrop-blur-md transition-all"
-                title="Copy image link"
-              >
-                <Share2 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={(e) => e.stopPropagation()}
-                className="p-2 bg-white/90 hover:bg-white text-zinc-900 rounded-full shadow-md backdrop-blur-md transition-all"
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(pin.image);
+              }}
+              style={{
+                background: 'rgba(250,248,244,0.92)',
+                color: 'var(--ink)',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '7px 10px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+              }}
+              title="Copy link"
+            >
+              <Share2 size={13} />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Caption & Author Below Image */}
-      <div className="mt-2 px-1">
+      {/* Below-image meta */}
+      <div style={{ padding: '10px 4px 4px' }}>
         {pin.imageText && (
-          <p className="text-sm font-semibold text-zinc-900 line-clamp-2 leading-tight">
+          <p
+            className="serif"
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: 'var(--ink)',
+              lineHeight: 1.35,
+              margin: 0,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
             {pin.imageText}
           </p>
         )}
+
         {pin.user && (
-          <div className="flex items-center gap-2 mt-1.5">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 7 }}>
             <img
               src={pin.user.dp || 'https://i.pinimg.com/280x280_RS/fe/7d/ee/fe7deef834e1fafe56f8023ced803ca9.jpg'}
-              alt={pin.user.fullname || pin.user.username}
-              className="w-6 h-6 rounded-full object-cover"
+              alt={pin.user.fullname}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '1px solid var(--rule)',
+              }}
             />
-            <span className="text-xs text-zinc-600 truncate font-medium">
+            <span style={{ fontSize: 12, color: 'var(--ink-secondary)', fontWeight: 500 }}>
               {pin.user.fullname || `@${pin.user.username}`}
             </span>
           </div>
