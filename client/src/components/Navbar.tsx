@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, Bell, MessageCircle, User as UserIcon, LogOut } from 'lucide-react';
+import { Search, Plus, LogOut, User as UserIcon, Grid3X3, X } from 'lucide-react';
 import type { User } from '../types';
 
 interface NavbarProps {
@@ -24,103 +24,290 @@ export const Navbar: React.FC<NavbarProps> = ({
   onTabChange,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-100 px-4 py-3">
-      <div className="max-w-[1920px] mx-auto flex items-center gap-3">
-        {/* Logo */}
+    <header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 40,
+        background: 'rgba(250, 248, 244, 0.96)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid var(--rule)',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1600,
+          margin: '0 auto',
+          padding: '0 24px',
+          height: 64,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+        }}
+      >
+        {/* Wordmark */}
         <button
           onClick={() => onTabChange('home')}
-          className="flex items-center gap-2 p-2 hover:bg-zinc-100 rounded-full transition-colors flex-shrink-0"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px 0',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
         >
-          <svg className="w-8 h-8 text-[#e60023]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.29.14-.62.92-3.86.92-3.86s-.23-.47-.23-1.17c0-1.1.64-1.92 1.44-1.92.68 0 1 .5 1 1.12 0 .68-.43 1.7-.66 2.64-.19.79.4 1.44 1.18 1.44 1.42 0 2.5-1.5 2.5-3.66 0-1.91-1.38-3.25-3.34-3.25-2.45 0-3.88 1.83-3.88 3.73 0 .74.28 1.53.64 1.96a.35.35 0 0 1 .08.34c-.09.37-.29 1.17-.33 1.33-.05.22-.17.27-.4.16-1.5-.7-2.43-2.88-2.43-4.64 0-3.77 2.74-7.24 7.9-7.24 4.15 0 7.37 2.96 7.37 6.91 0 4.12-2.6 7.44-6.2 7.44-1.21 0-2.35-.63-2.74-1.38l-.75 2.85c-.27 1.04-1 2.35-1.49 3.15A12 12 0 1 0 12 0z"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)">
+            <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.29.14-.62.92-3.86.92-3.86s-.23-.47-.23-1.17c0-1.1.64-1.92 1.44-1.92.68 0 1 .5 1 1.12 0 .68-.43 1.7-.66 2.64-.19.79.4 1.44 1.18 1.44 1.42 0 2.5-1.5 2.5-3.66 0-1.91-1.38-3.25-3.34-3.25-2.45 0-3.88 1.83-3.88 3.73 0 .74.28 1.53.64 1.96a.35.35 0 0 1 .08.34c-.09.37-.29 1.17-.33 1.33-.05.22-.17.27-.4.16-1.5-.7-2.43-2.88-2.43-4.64 0-3.77 2.74-7.24 7.9-7.24 4.15 0 7.37 2.96 7.37 6.91 0 4.12-2.6 7.44-6.2 7.44-1.21 0-2.35-.63-2.74-1.38l-.75 2.85c-.27 1.04-1 2.35-1.49 3.15A12 12 0 1 0 12 0z" />
           </svg>
-        </button>
-
-        {/* Navigation Tabs */}
-        <button
-          onClick={() => onTabChange('home')}
-          className={`px-4 py-2.5 rounded-full font-semibold text-sm transition-colors ${
-            activeTab === 'home'
-              ? 'bg-zinc-950 text-white'
-              : 'text-zinc-900 hover:bg-zinc-100'
-          }`}
-        >
-          Home
-        </button>
-
-        {/* Create Button */}
-        {user && (
-          <button
-            onClick={onOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-full font-semibold text-sm text-zinc-900 hover:bg-zinc-100 transition-colors"
+          <span
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 18,
+              fontWeight: 700,
+              color: 'var(--ink)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1,
+            }}
           >
-            <Plus className="w-4 h-4" />
-            <span>Create</span>
-          </button>
-        )}
+            Pintrest
+            <span style={{ color: 'var(--accent)', marginLeft: 2 }}>AI</span>
+          </span>
+        </button>
 
-        {/* Search Bar */}
-        <div className="flex-1 relative">
-          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+        {/* Nav tabs */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <button
+            onClick={() => onTabChange('home')}
+            style={{
+              background: activeTab === 'home' ? 'var(--ink)' : 'transparent',
+              color: activeTab === 'home' ? 'var(--ground)' : 'var(--ink-secondary)',
+              border: 'none',
+              borderRadius: 'var(--radius-pill)',
+              padding: '7px 16px',
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: `background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease)`,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <Grid3X3 size={15} />
+            Feed
+          </button>
+          {user && (
+            <button
+              onClick={() => onTabChange('profile')}
+              style={{
+                background: activeTab === 'profile' ? 'var(--ink)' : 'transparent',
+                color: activeTab === 'profile' ? 'var(--ground)' : 'var(--ink-secondary)',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '7px 16px',
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: `background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease)`,
+              }}
+            >
+              Profile
+            </button>
+          )}
+        </nav>
+
+        {/* Search — expands on focus */}
+        <div
+          style={{
+            flex: 1,
+            position: 'relative',
+            maxWidth: searchFocused ? 480 : 360,
+            transition: `max-width var(--dur-mid) var(--ease)`,
+          }}
+        >
+          <Search
+            size={15}
+            style={{
+              position: 'absolute',
+              left: 14,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'var(--ink-muted)',
+              pointerEvents: 'none',
+            }}
+          />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search for ideas, pins, or creators..."
-            className="w-full bg-zinc-100 hover:bg-zinc-200/70 focus:bg-white border border-transparent focus:border-zinc-300 focus:outline-none rounded-full py-2.5 pl-11 pr-4 text-sm transition-all"
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            placeholder="Search pins, creators…"
+            style={{
+              width: '100%',
+              background: searchFocused ? 'var(--surface-card)' : 'var(--surface-raised)',
+              border: searchFocused ? '1.5px solid var(--ink)' : '1.5px solid transparent',
+              borderRadius: 'var(--radius-pill)',
+              padding: '8px 36px 8px 38px',
+              fontSize: 14,
+              color: 'var(--ink)',
+              outline: 'none',
+              transition: `background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)`,
+              fontFamily: 'var(--font-sans)',
+            }}
           />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchChange('')}
+              style={{
+                position: 'absolute',
+                right: 10,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--ink-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: 2,
+              }}
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-1.5 flex-shrink-0">
-          <button className="p-2.5 hover:bg-zinc-100 text-zinc-700 rounded-full transition-colors hidden sm:flex">
-            <Bell className="w-5 h-5" />
-          </button>
-          <button className="p-2.5 hover:bg-zinc-100 text-zinc-700 rounded-full transition-colors hidden sm:flex">
-            <MessageCircle className="w-5 h-5" />
-          </button>
+        {/* Right actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          {user && (
+            <button
+              onClick={onOpenCreate}
+              style={{
+                background: 'var(--ink)',
+                color: 'var(--ground)',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '8px 18px',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                transition: `background var(--dur-fast) var(--ease)`,
+                letterSpacing: '0.01em',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--ink-secondary)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'var(--ink)')}
+            >
+              <Plus size={15} />
+              Create
+            </button>
+          )}
 
           {user ? (
-            <div className="relative">
+            <div style={{ position: 'relative' }}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="flex items-center gap-2 p-1 hover:bg-zinc-100 rounded-full transition-colors"
+                style={{
+                  background: 'none',
+                  border: '1.5px solid var(--rule)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: 2,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: `border-color var(--dur-fast) var(--ease)`,
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--ink-secondary)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--rule)')}
               >
                 <img
                   src={user.dp || 'https://i.pinimg.com/280x280_RS/fe/7d/ee/fe7deef834e1fafe56f8023ced803ca9.jpg'}
                   alt={user.fullname}
-                  className="w-8 h-8 rounded-full object-cover ring-2 ring-zinc-200"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
                 />
               </button>
 
-              {/* Dropdown Menu */}
               {showMenu && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-zinc-100 py-2 z-50">
-                  <div className="px-4 py-3 border-b border-zinc-100">
-                    <p className="font-semibold text-sm text-zinc-900">{user.fullname}</p>
-                    <p className="text-xs text-zinc-500">@{user.username}</p>
+                <div
+                  className="fade-up"
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 'calc(100% + 8px)',
+                    width: 220,
+                    background: 'var(--surface-card)',
+                    border: '1px solid var(--rule)',
+                    borderRadius: 14,
+                    boxShadow: '0 8px 32px rgba(26,24,22,0.12)',
+                    overflow: 'hidden',
+                    zIndex: 50,
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '14px 16px',
+                      borderBottom: '1px solid var(--rule)',
+                    }}
+                  >
+                    <p style={{ fontWeight: 600, fontSize: 14, color: 'var(--ink)', margin: 0 }}>{user.fullname}</p>
+                    <p style={{ fontSize: 12, color: 'var(--ink-muted)', margin: '2px 0 0' }}>@{user.username}</p>
                   </div>
                   <button
-                    onClick={() => {
-                      onTabChange('profile');
-                      setShowMenu(false);
+                    onClick={() => { onTabChange('profile'); setShowMenu(false); }}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '10px 16px',
+                      fontSize: 14,
+                      color: 'var(--ink)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
                     }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 flex items-center gap-2"
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-raised)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                   >
-                    <UserIcon className="w-4 h-4" />
-                    <span>Your Profile</span>
+                    <UserIcon size={15} />
+                    Your Profile
                   </button>
                   <button
-                    onClick={() => {
-                      onLogout();
-                      setShowMenu(false);
+                    onClick={() => { onLogout(); setShowMenu(false); }}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '10px 16px',
+                      fontSize: 14,
+                      color: 'var(--accent)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
                     }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                    onMouseEnter={e => (e.currentTarget.style.background = '#fff5f5')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                   >
-                    <LogOut className="w-4 h-4" />
-                    <span>Log out</span>
+                    <LogOut size={15} />
+                    Log out
                   </button>
                 </div>
               )}
@@ -128,7 +315,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={onOpenAuth}
-              className="bg-[#e60023] hover:bg-[#b8001c] text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all shadow-sm"
+              style={{
+                background: 'var(--accent)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '8px 20px',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: `background var(--dur-fast) var(--ease)`,
+                letterSpacing: '0.01em',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-deep)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'var(--accent)')}
             >
               Log in
             </button>
