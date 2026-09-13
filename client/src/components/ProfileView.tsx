@@ -1,7 +1,7 @@
 import React from 'react';
 import type { User, Post } from '../types';
 import { PinCard } from './PinCard';
-import { Share2, Plus, Sparkles } from 'lucide-react';
+import { Share2, Plus, Bookmark } from 'lucide-react';
 
 interface ProfileViewProps {
   user: User;
@@ -19,69 +19,216 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   const userPins = user.posts || [];
 
   return (
-    <div className="max-w-[1920px] mx-auto px-4 py-8">
+    <div
+      style={{
+        maxWidth: 1600,
+        margin: '0 auto',
+        padding: '36px 24px 64px',
+      }}
+    >
       {/* Profile Header */}
-      <div className="flex flex-col items-center text-center max-w-xl mx-auto pb-10 border-b border-zinc-100">
-        <div className="relative group mb-4">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          maxWidth: 580,
+          margin: '0 auto',
+          paddingBottom: 36,
+          borderBottom: '1px solid var(--rule)',
+        }}
+      >
+        <div style={{ position: 'relative', marginBottom: 16 }}>
           <img
             src={user.dp || 'https://i.pinimg.com/280x280_RS/fe/7d/ee/fe7deef834e1fafe56f8023ced803ca9.jpg'}
             alt={user.fullname}
-            className="w-32 h-32 rounded-full object-cover shadow-lg ring-4 ring-white"
+            style={{
+              width: 104,
+              height: 104,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '2px solid var(--rule)',
+              boxShadow: '0 8px 24px rgba(26,24,22,0.08)',
+            }}
           />
         </div>
 
-        <h1 className="text-3xl font-extrabold text-zinc-900">{user.fullname}</h1>
-        <p className="text-sm text-zinc-500 mt-1 font-medium">@{user.username}</p>
-
-        <p className="text-sm text-zinc-600 mt-3 max-w-md">
-          Visual explorer & creator on Pinterest AI. Saving inspirations and discovering creative designs.
+        <h1
+          className="serif"
+          style={{
+            fontSize: 32,
+            fontWeight: 700,
+            color: 'var(--ink)',
+            margin: 0,
+            lineHeight: 1.2,
+          }}
+        >
+          {user.fullname}
+        </h1>
+        <p style={{ fontSize: 13, color: 'var(--ink-muted)', marginTop: 4, marginBottom: 0 }}>
+          @{user.username}
         </p>
 
-        <div className="flex items-center gap-3 mt-6">
+        <p
+          style={{
+            fontSize: 14,
+            color: 'var(--ink-secondary)',
+            marginTop: 14,
+            lineHeight: 1.5,
+          }}
+        >
+          Visual collector & curator on Pintrest AI. Gathering compositions, architectural forms, and graphic arts.
+        </p>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 20 }}>
           <button
             onClick={() => navigator.clipboard.writeText(window.location.href)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-full font-semibold text-sm transition-colors"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '8px 18px',
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--rule)',
+              color: 'var(--ink)',
+              borderRadius: 'var(--radius-pill)',
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: `all var(--dur-fast) var(--ease)`,
+            }}
           >
-            <Share2 className="w-4 h-4" />
-            <span>Share</span>
+            <Share2 size={14} />
+            <span>Share Profile</span>
           </button>
+
           <button
             onClick={onOpenCreate}
-            className="flex items-center gap-2 px-5 py-2.5 bg-zinc-950 hover:bg-black text-white rounded-full font-semibold text-sm transition-colors shadow-sm"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '8px 20px',
+              background: 'var(--ink)',
+              color: 'var(--ground)',
+              border: 'none',
+              borderRadius: 'var(--radius-pill)',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+              transition: `background var(--dur-fast) var(--ease)`,
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--ink-secondary)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'var(--ink)')}
           >
-            <Plus className="w-4 h-4" />
-            <span>Create Pin</span>
+            <Plus size={15} />
+            <span>New Pin</span>
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center justify-center gap-8 pt-6 pb-4">
-        <button className="font-bold text-sm text-zinc-900 pb-2 border-b-2 border-zinc-900">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 24,
+          paddingTop: 24,
+          paddingBottom: 20,
+        }}
+      >
+        <button
+          style={{
+            background: 'none',
+            border: 'none',
+            fontSize: 14,
+            fontWeight: 600,
+            color: 'var(--ink)',
+            cursor: 'pointer',
+            paddingBottom: 6,
+            borderBottom: '2px solid var(--ink)',
+          }}
+        >
           Created ({userPins.length})
         </button>
-        <button className="font-bold text-sm text-zinc-400 hover:text-zinc-600 pb-2 transition-colors">
+        <button
+          style={{
+            background: 'none',
+            border: 'none',
+            fontSize: 14,
+            fontWeight: 500,
+            color: 'var(--ink-muted)',
+            cursor: 'pointer',
+            paddingBottom: 6,
+            borderBottom: '2px solid transparent',
+          }}
+        >
           Saved
         </button>
       </div>
 
       {/* User Pins Grid */}
       {userPins.length === 0 ? (
-        <div className="text-center py-16">
-          <div className="w-12 h-12 bg-red-50 text-[#e60023] rounded-full flex items-center justify-center mx-auto mb-3">
-            <Sparkles className="w-6 h-6" />
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '48px 24px',
+            maxWidth: 420,
+            margin: '0 auto',
+          }}
+        >
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--rule)',
+              color: 'var(--ink-secondary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}
+          >
+            <Bookmark size={20} />
           </div>
-          <h3 className="font-bold text-lg text-zinc-800">You haven't created any Pins yet</h3>
-          <p className="text-sm text-zinc-500 mt-1 mb-5">Share your ideas with the world.</p>
+          <h3
+            className="serif"
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              color: 'var(--ink)',
+              margin: 0,
+            }}
+          >
+            No entries published yet
+          </h3>
+          <p style={{ fontSize: 13, color: 'var(--ink-secondary)', marginTop: 6, marginBottom: 20 }}>
+            Share your visual research and inspirations with the feed.
+          </p>
           <button
             onClick={onOpenCreate}
-            className="bg-[#e60023] hover:bg-[#b8001c] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md transition-all"
+            style={{
+              background: 'var(--accent)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 'var(--radius-pill)',
+              padding: '9px 22px',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              letterSpacing: '0.01em',
+            }}
           >
-            Create your first Pin
+            Publish your first pin
           </button>
         </div>
       ) : (
-        <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-4 pt-4">
+        <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-5 pt-4">
           {userPins.map((pin) => (
             <PinCard
               key={pin._id}
