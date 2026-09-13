@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Heart, Download, Share2, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import { X, Heart, Download, Share2, ArrowLeft, Bookmark } from 'lucide-react';
 import type { Post } from '../types';
 
 interface PinModalProps {
@@ -39,118 +39,314 @@ export const PinModal: React.FC<PinModalProps> = ({ pin, onClose, onLike, curren
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-      {/* Background click listener */}
-      <div className="fixed inset-0" onClick={onClose} />
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        overflowY: 'auto',
+        background: 'rgba(26, 24, 22, 0.65)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px 16px',
+      }}
+      className="fade-up"
+    >
+      {/* Background dismissal listener */}
+      <div
+        style={{ position: 'fixed', inset: 0 }}
+        onClick={onClose}
+      />
 
-      {/* Close button top-left on mobile / floating */}
+      {/* Floating close button */}
       <button
         onClick={onClose}
-        className="fixed top-5 left-5 z-50 p-3 bg-white/90 hover:bg-white text-zinc-900 rounded-full shadow-lg transition-all"
+        style={{
+          position: 'fixed',
+          top: 20,
+          left: 20,
+          zIndex: 60,
+          padding: 10,
+          background: 'var(--surface-card)',
+          color: 'var(--ink)',
+          border: '1px solid var(--rule)',
+          borderRadius: 'var(--radius-pill)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+        }}
+        title="Back"
       >
-        <ArrowLeft className="w-5 h-5" />
+        <ArrowLeft size={18} />
       </button>
 
-      {/* Modal Container */}
-      <div className="relative z-10 bg-white rounded-3xl shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col md:flex-row my-auto max-h-[90vh]">
-        {/* Left: Image Container */}
-        <div className="md:w-1/2 bg-zinc-950 flex items-center justify-center p-4 overflow-hidden">
+      {/* Modal Surface */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          background: 'var(--surface-card)',
+          border: '1px solid var(--rule)',
+          borderRadius: 20,
+          boxShadow: '0 24px 48px -12px rgba(26, 24, 22, 0.25)',
+          maxWidth: 980,
+          width: '100%',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'row',
+          maxHeight: '88vh',
+        }}
+        className="flex-col md:flex-row"
+      >
+        {/* Left: Gallery framing */}
+        <div
+          style={{
+            background: 'var(--ink)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 24,
+            overflow: 'hidden',
+          }}
+          className="md:w-3/5"
+        >
           <img
             src={pin.image}
             alt={pin.imageText}
-            className="w-full h-auto max-h-[75vh] object-contain rounded-2xl"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '74vh',
+              objectFit: 'contain',
+              borderRadius: 12,
+            }}
           />
         </div>
 
-        {/* Right: Info & Actions */}
-        <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto bg-white">
+        {/* Right: Editorial Information & Actions */}
+        <div
+          style={{
+            padding: '32px 28px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            overflowY: 'auto',
+            background: 'var(--surface-card)',
+          }}
+          className="md:w-2/5"
+        >
           <div>
             {/* Top Toolbar */}
-            <div className="flex items-center justify-between pb-6 border-b border-zinc-100">
-              <div className="flex items-center gap-2">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingBottom: 20,
+                borderBottom: '1px solid var(--rule)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <button
                   onClick={handleDownload}
-                  className="p-2.5 hover:bg-zinc-100 rounded-full text-zinc-700 transition-colors"
-                  title="Open/Download original"
+                  style={{
+                    padding: 8,
+                    background: 'var(--surface-raised)',
+                    border: '1px solid var(--rule)',
+                    borderRadius: 'var(--radius-pill)',
+                    color: 'var(--ink)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  title="Open original"
                 >
-                  <Download className="w-5 h-5" />
+                  <Download size={15} />
                 </button>
                 <button
                   onClick={() => navigator.clipboard.writeText(pin.image)}
-                  className="p-2.5 hover:bg-zinc-100 rounded-full text-zinc-700 transition-colors"
-                  title="Copy Link"
+                  style={{
+                    padding: 8,
+                    background: 'var(--surface-raised)',
+                    border: '1px solid var(--rule)',
+                    borderRadius: 'var(--radius-pill)',
+                    color: 'var(--ink)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  title="Copy link"
                 >
-                  <Share2 className="w-5 h-5" />
-                </button>
-                <button className="p-2.5 hover:bg-zinc-100 rounded-full text-zinc-700 transition-colors">
-                  <MoreHorizontal className="w-5 h-5" />
+                  <Share2 size={15} />
                 </button>
               </div>
 
               {/* Red Save Button */}
               <button
                 onClick={() => setIsSaved(!isSaved)}
-                className={`px-6 py-3 rounded-full font-bold text-sm shadow-sm transition-all ${
-                  isSaved
-                    ? 'bg-zinc-950 text-white hover:bg-black'
-                    : 'bg-[#e60023] text-white hover:bg-[#b8001c]'
-                }`}
+                style={{
+                  background: isSaved ? 'var(--ink)' : 'var(--accent)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '9px 20px',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+                  letterSpacing: '0.01em',
+                }}
               >
+                <Bookmark size={14} fill={isSaved ? '#fff' : 'none'} />
                 {isSaved ? 'Saved' : 'Save'}
               </button>
             </div>
 
             {/* Pin Title / Caption */}
-            <div className="mt-6">
-              <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 leading-snug">
-                {pin.imageText || 'Visual Inspiration'}
+            <div style={{ marginTop: 24 }}>
+              <h1
+                className="serif"
+                style={{
+                  fontSize: 26,
+                  fontWeight: 700,
+                  color: 'var(--ink)',
+                  lineHeight: 1.25,
+                  margin: 0,
+                }}
+              >
+                {pin.imageText || 'Visual Study'}
               </h1>
-              <p className="text-xs text-zinc-400 mt-2">
-                Uploaded on {new Date(pin.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+              <p
+                style={{
+                  fontSize: 12,
+                  color: 'var(--ink-muted)',
+                  marginTop: 8,
+                  marginBottom: 0,
+                  fontFamily: 'var(--font-sans)',
+                }}
+              >
+                Curated on {new Date(pin.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}
               </p>
             </div>
 
-            {/* Author Section */}
+            {/* Author Block */}
             {pin.user && (
-              <div className="flex items-center justify-between mt-8 p-4 bg-zinc-50 rounded-2xl">
-                <div className="flex items-center gap-3">
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: 28,
+                  padding: '14px 16px',
+                  background: 'var(--surface-raised)',
+                  border: '1px solid var(--rule)',
+                  borderRadius: 14,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <img
                     src={pin.user.dp || 'https://i.pinimg.com/280x280_RS/fe/7d/ee/fe7deef834e1fafe56f8023ced803ca9.jpg'}
                     alt={pin.user.fullname}
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-white"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '1px solid var(--rule)',
+                    }}
                   />
                   <div>
-                    <h4 className="font-bold text-zinc-900 text-sm">{pin.user.fullname}</h4>
-                    <p className="text-xs text-zinc-500">@{pin.user.username}</p>
+                    <h4
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 14,
+                        color: 'var(--ink)',
+                        margin: 0,
+                      }}
+                    >
+                      {pin.user.fullname}
+                    </h4>
+                    <p
+                      style={{
+                        fontSize: 12,
+                        color: 'var(--ink-secondary)',
+                        margin: '1px 0 0',
+                      }}
+                    >
+                      @{pin.user.username}
+                    </p>
                   </div>
                 </div>
 
-                <button className="bg-zinc-200 hover:bg-zinc-300 text-zinc-900 font-semibold text-xs px-4 py-2.5 rounded-full transition-colors">
-                  Follow
-                </button>
+                <span
+                  style={{
+                    fontSize: 11,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    fontWeight: 600,
+                    color: 'var(--ink-muted)',
+                  }}
+                >
+                  Contributor
+                </span>
               </div>
             )}
           </div>
 
-          {/* Bottom Bar: Like Button & Stats */}
-          <div className="pt-6 border-t border-zinc-100 mt-6 flex items-center justify-between">
+          {/* Bottom Bar: Like Button & Close */}
+          <div
+            style={{
+              paddingTop: 20,
+              marginTop: 24,
+              borderTop: '1px solid var(--rule)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             <button
               onClick={() => onLike(pin._id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                isLiked
-                  ? 'bg-red-50 text-red-600'
-                  : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800'
-              }`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 7,
+                padding: '8px 16px',
+                borderRadius: 'var(--radius-pill)',
+                fontSize: 13,
+                fontWeight: 600,
+                border: '1px solid var(--rule)',
+                background: isLiked ? '#fff5f5' : 'var(--surface-raised)',
+                color: isLiked ? 'var(--accent)' : 'var(--ink)',
+                cursor: 'pointer',
+                transition: `all var(--dur-fast) var(--ease)`,
+              }}
             >
-              <Heart className={`w-5 h-5 ${isLiked ? 'fill-current text-red-600' : ''}`} />
+              <Heart size={16} fill={isLiked ? 'var(--accent)' : 'none'} color={isLiked ? 'var(--accent)' : 'currentColor'} />
               <span>{pin.likes?.length || 0} Likes</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-2.5 hover:bg-zinc-100 text-zinc-500 rounded-full transition-colors"
+              style={{
+                padding: 8,
+                background: 'none',
+                border: 'none',
+                color: 'var(--ink-muted)',
+                borderRadius: 'var(--radius-pill)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              title="Close modal"
             >
-              <X className="w-5 h-5" />
+              <X size={18} />
             </button>
           </div>
         </div>
