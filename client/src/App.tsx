@@ -7,6 +7,7 @@ import { ProfileView } from './components/ProfileView';
 import { AuthModal } from './components/AuthModal';
 import { api } from './services/api';
 import type { Post, User } from './types';
+import { UserCheck } from 'lucide-react';
 
 export function App() {
   const [pins, setPins] = useState<Post[]>([]);
@@ -61,7 +62,7 @@ export function App() {
     }
 
     try {
-      const result = await api.toggleLike(pinId);
+      await api.toggleLike(pinId);
       setPins((prevPins) =>
         prevPins.map((p) => {
           if (p._id === pinId) {
@@ -83,8 +84,6 @@ export function App() {
           : [...(selectedPin.likes || []), user._id];
         setSelectedPin({ ...selectedPin, likes: updatedLikes });
       }
-
-      console.log('Like toggled:', result);
     } catch (err) {
       console.error('Failed to toggle like:', err);
     }
@@ -93,7 +92,7 @@ export function App() {
   // Handle Logout
   const handleLogout = async () => {
     try {
-      await fetch('/logout');
+      await fetch('/api/auth/logout', { credentials: 'include' });
       setUser(null);
       setActiveTab('home');
     } catch (err) {
@@ -129,7 +128,15 @@ export function App() {
   }, [pins, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
+    <div
+      style={{
+        minHeight: '100vh',
+        background: 'var(--ground)',
+        color: 'var(--ink)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {/* Navbar */}
       <Navbar
         user={user}
@@ -143,7 +150,7 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1">
+      <main style={{ flex: 1 }}>
         {activeTab === 'home' ? (
           <MasonryGrid
             pins={filteredPins}
@@ -160,13 +167,69 @@ export function App() {
             onOpenCreate={() => setIsCreateOpen(true)}
           />
         ) : (
-          <div className="text-center py-20">
-            <h2 className="text-xl font-bold">Please log in to view your profile</h2>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '80px 24px',
+              textAlign: 'center',
+            }}
+          >
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                background: 'var(--surface-raised)',
+                border: '1px solid var(--rule)',
+                color: 'var(--ink-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 16,
+              }}
+            >
+              <UserCheck size={22} />
+            </div>
+            <h2
+              className="serif"
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                color: 'var(--ink)',
+                margin: '0 0 8px',
+              }}
+            >
+              Curator Profile
+            </h2>
+            <p
+              style={{
+                fontSize: 14,
+                color: 'var(--ink-secondary)',
+                maxWidth: 320,
+                marginBottom: 20,
+              }}
+            >
+              Sign in to view your published collections and saved inspirations.
+            </p>
             <button
               onClick={() => setIsAuthOpen(true)}
-              className="mt-4 bg-[#e60023] text-white px-6 py-2.5 rounded-full font-bold text-sm"
+              style={{
+                background: 'var(--accent)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '10px 24px',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: 'pointer',
+                letterSpacing: '0.01em',
+                boxShadow: '0 2px 8px rgba(230,0,35,0.25)',
+              }}
             >
-              Log in
+              Sign in to proceed
             </button>
           </div>
         )}
