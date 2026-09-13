@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, UploadCloud, Loader2, Sparkles } from 'lucide-react';
+import { X, UploadCloud, Loader2 } from 'lucide-react';
 import { api } from '../services/api';
 import type { Post } from '../types';
 
@@ -75,22 +75,22 @@ export const CreatePinModal: React.FC<CreatePinModalProps> = ({ isOpen, onClose,
       setError(null);
 
       // Step 1: Request Cloudflare R2 Presigned Upload URL
-      setUploadStatus('Generating direct-to-R2 upload link...');
+      setUploadStatus('Acquiring Cloudflare R2 presigned token...');
       const { uploadUrl, publicUrl } = await api.getPresignedUrl(file.name, file.type);
 
       // Step 2: Directly upload binary to Cloudflare R2 bucket
-      setUploadStatus('Streaming image directly to Cloudflare R2...');
+      setUploadStatus('Streaming file directly to edge storage...');
       await api.uploadBinaryToR2(uploadUrl, file);
 
       // Step 3: Save post metadata to MongoDB
-      setUploadStatus('Saving pin details...');
+      setUploadStatus('Registering entry to visual catalogue...');
       const post = await api.createPost(publicUrl, caption);
 
       onPinCreated(post);
       onClose();
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Failed to upload pin');
+      setError(err.message || 'Failed to publish entry');
     } finally {
       setUploading(false);
       setUploadStatus('');
@@ -98,123 +98,295 @@ export const CreatePinModal: React.FC<CreatePinModalProps> = ({ isOpen, onClose,
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="fixed inset-0" onClick={uploading ? undefined : onClose} />
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        overflowY: 'auto',
+        background: 'rgba(26, 24, 22, 0.65)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px 16px',
+      }}
+      className="fade-up"
+    >
+      <div
+        style={{ position: 'fixed', inset: 0 }}
+        onClick={uploading ? undefined : onClose}
+      />
 
-      <div className="relative z-10 bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8">
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          background: 'var(--surface-card)',
+          border: '1px solid var(--rule)',
+          borderRadius: 20,
+          boxShadow: '0 24px 48px -12px rgba(26, 24, 22, 0.25)',
+          maxWidth: 600,
+          width: '100%',
+          padding: '28px 32px',
+        }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between pb-6 border-b border-zinc-100">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-[#e60023]">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <h2 className="text-xl font-bold text-zinc-900">Create Pin</h2>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingBottom: 20,
+            borderBottom: '1px solid var(--rule)',
+          }}
+        >
+          <div>
+            <h2
+              className="serif"
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: 'var(--ink)',
+                margin: 0,
+              }}
+            >
+              Publish Inspiration
+            </h2>
+            <p style={{ fontSize: 13, color: 'var(--ink-secondary)', margin: '4px 0 0' }}>
+              Upload directly to Cloudflare R2 and share with the collection.
+            </p>
           </div>
           <button
             onClick={onClose}
             disabled={uploading}
-            className="p-2 hover:bg-zinc-100 text-zinc-400 hover:text-zinc-600 rounded-full transition-colors disabled:opacity-50"
+            style={{
+              padding: 8,
+              background: 'none',
+              border: 'none',
+              borderRadius: 'var(--radius-pill)',
+              color: 'var(--ink-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
           >
-            <X className="w-5 h-5" />
+            <X size={18} />
           </button>
         </div>
 
         {error && (
-          <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100">
+          <div
+            style={{
+              marginTop: 16,
+              padding: '10px 14px',
+              background: '#fff5f5',
+              border: '1px solid #fed7d7',
+              borderRadius: 10,
+              color: 'var(--accent)',
+              fontSize: 13,
+              fontWeight: 500,
+            }}
+          >
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        <form onSubmit={handleSubmit} style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
           {/* Dropzone */}
           <div
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-3xl p-6 text-center cursor-pointer transition-all ${
-              preview
-                ? 'border-zinc-200 bg-zinc-50'
-                : 'border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 hover:bg-zinc-50'
-            }`}
+            style={{
+              border: preview ? '1px solid var(--rule)' : '2px dashed var(--rule)',
+              borderRadius: 16,
+              padding: 24,
+              textAlign: 'center',
+              cursor: 'pointer',
+              background: 'var(--surface-raised)',
+              transition: `border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease)`,
+            }}
           >
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="hidden"
+              style={{ display: 'none' }}
             />
 
             {preview ? (
-              <div className="relative group max-h-72 flex justify-center">
+              <div style={{ position: 'relative', maxHeight: 260, display: 'flex', justifyContent: 'center' }}>
                 <img
                   src={preview}
                   alt="Preview"
-                  className="max-h-72 rounded-2xl object-contain shadow-md"
+                  style={{
+                    maxHeight: 260,
+                    borderRadius: 12,
+                    objectFit: 'contain',
+                  }}
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center text-white font-semibold text-sm">
-                  Click to replace image
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: 12,
+                    background: 'rgba(26,24,22,0.4)',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    opacity: 0,
+                    transition: 'opacity 0.2s',
+                  }}
+                  className="hover:opacity-100"
+                >
+                  Click to replace photograph
                 </div>
               </div>
             ) : (
-              <div className="py-8 flex flex-col items-center">
-                <div className="w-14 h-14 bg-white rounded-full shadow-sm flex items-center justify-center text-zinc-400 mb-3">
-                  <UploadCloud className="w-7 h-7" />
+              <div style={{ padding: '24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: 'var(--surface-card)',
+                    border: '1px solid var(--rule)',
+                    color: 'var(--ink-secondary)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 12,
+                  }}
+                >
+                  <UploadCloud size={22} />
                 </div>
-                <p className="font-semibold text-zinc-800 text-sm">
-                  Drag and drop an image or click to browse
+                <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', margin: 0 }}>
+                  Drag & drop an image or click to select
                 </p>
-                <p className="text-xs text-zinc-400 mt-1">
-                  Uploads directly to Cloudflare R2 (PNG, JPG, WebP up to 10MB)
+                <p style={{ fontSize: 12, color: 'var(--ink-muted)', marginTop: 4, marginBottom: 0 }}>
+                  PNG, JPG, WebP up to 10MB
                 </p>
               </div>
             )}
           </div>
 
-          {/* Caption Input */}
+          {/* Caption */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">
-              Title or Caption
+            <label
+              style={{
+                display: 'block',
+                fontSize: 12,
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                color: 'var(--ink-secondary)',
+                marginBottom: 8,
+              }}
+            >
+              Title & Context
             </label>
             <textarea
               rows={3}
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              placeholder="Tell everyone what your Pin is about..."
-              className="w-full border border-zinc-200 focus:border-zinc-900 rounded-2xl p-4 text-sm focus:outline-none transition-colors resize-none"
+              placeholder="What makes this piece interesting?"
+              style={{
+                width: '100%',
+                background: 'var(--surface-card)',
+                border: '1px solid var(--rule)',
+                borderRadius: 12,
+                padding: '12px 14px',
+                fontSize: 14,
+                color: 'var(--ink)',
+                outline: 'none',
+                fontFamily: 'var(--font-sans)',
+                resize: 'none',
+                lineHeight: 1.5,
+              }}
+              onFocus={e => (e.currentTarget.style.borderColor = 'var(--ink)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'var(--rule)')}
             />
           </div>
 
-          {/* Upload Status Banner */}
+          {/* Status banner */}
           {uploading && (
-            <div className="flex items-center gap-3 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 text-xs text-zinc-600">
-              <Loader2 className="w-4 h-4 animate-spin text-[#e60023]" />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '10px 14px',
+                background: 'var(--surface-raised)',
+                border: '1px solid var(--rule)',
+                borderRadius: 10,
+                fontSize: 12,
+                color: 'var(--ink-secondary)',
+              }}
+            >
+              <Loader2 size={16} className="animate-spin text-red-600" />
               <span>{uploadStatus}</span>
             </div>
           )}
 
-          {/* Footer Submit */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100">
+          {/* Actions */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: 10,
+              paddingTop: 16,
+              borderTop: '1px solid var(--rule)',
+            }}
+          >
             <button
               type="button"
               onClick={onClose}
               disabled={uploading}
-              className="px-5 py-2.5 rounded-full font-semibold text-sm text-zinc-700 hover:bg-zinc-100 transition-colors disabled:opacity-50"
+              style={{
+                padding: '9px 18px',
+                borderRadius: 'var(--radius-pill)',
+                fontSize: 13,
+                fontWeight: 500,
+                color: 'var(--ink-secondary)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={uploading}
-              className="flex items-center gap-2 bg-[#e60023] hover:bg-[#b8001c] disabled:bg-zinc-300 text-white font-bold px-6 py-2.5 rounded-full text-sm shadow-md transition-all"
+              style={{
+                background: 'var(--accent)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                padding: '9px 24px',
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                letterSpacing: '0.01em',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+              }}
             >
               {uploading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Publishing...</span>
+                  <Loader2 size={15} className="animate-spin" />
+                  <span>Publishing…</span>
                 </>
               ) : (
-                <span>Publish Pin</span>
+                <span>Publish to Feed</span>
               )}
             </button>
           </div>
