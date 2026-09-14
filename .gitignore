@@ -22,8 +22,9 @@ yarn-debug.log*
 MEMORY.txt
 backend/MEMORY.txt
 
+# Agent skills and tool caches
+.agent/
+.impeccable/
+
 # Executable binaries
 *.exe
-.agent/**/bin/
-.agent/**/scripts/bin/
-
