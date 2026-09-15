@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Navbar } from './components/Navbar';
+import { LandingView } from './components/LandingView';
 import { MasonryGrid } from './components/MasonryGrid';
 import { PinModal } from './components/PinModal';
 import { CreatePinModal } from './components/CreatePinModal';
@@ -13,7 +14,7 @@ export function App() {
   const [pins, setPins] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [activeTab, setActiveTab] = useState<'home' | 'profile'>('home');
+  const [activeTab, setActiveTab] = useState<'landing' | 'feed' | 'profile'>('landing');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Modals state
@@ -94,7 +95,7 @@ export function App() {
     try {
       await fetch('/api/auth/logout', { credentials: 'include' });
       setUser(null);
-      setActiveTab('home');
+      setActiveTab('landing');
     } catch (err) {
       console.error(err);
     }
@@ -113,6 +114,7 @@ export function App() {
           : null
       );
     }
+    setActiveTab('feed');
   };
 
   // Filter pins by search query
@@ -137,7 +139,7 @@ export function App() {
         flexDirection: 'column',
       }}
     >
-      {/* Navbar */}
+      {/* Restructured Atelier Navbar */}
       <Navbar
         user={user}
         onOpenCreate={() => (user ? setIsCreateOpen(true) : setIsAuthOpen(true))}
@@ -151,7 +153,14 @@ export function App() {
 
       {/* Main Content Area */}
       <main style={{ flex: 1 }}>
-        {activeTab === 'home' ? (
+        {activeTab === 'landing' ? (
+          <LandingView
+            onExplore={() => setActiveTab('feed')}
+            onOpenAuth={() => setIsAuthOpen(true)}
+            samplePins={pins}
+            onPinClick={(pin) => setSelectedPin(pin)}
+          />
+        ) : activeTab === 'feed' ? (
           <MasonryGrid
             pins={filteredPins}
             onPinClick={(pin) => setSelectedPin(pin)}
@@ -202,7 +211,7 @@ export function App() {
                 margin: '0 0 8px',
               }}
             >
-              Curator Profile
+              Curator Studio
             </h2>
             <p
               style={{
@@ -212,7 +221,7 @@ export function App() {
                 marginBottom: 20,
               }}
             >
-              Sign in to view your published collections and saved inspirations.
+              Sign in to manage your private archive, published studies, and saved boards.
             </p>
             <button
               onClick={() => setIsAuthOpen(true)}

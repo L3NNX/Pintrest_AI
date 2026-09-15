@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, LogOut, User as UserIcon, Grid3X3, X } from 'lucide-react';
+import { Search, Plus, LogOut, User as UserIcon, Sparkles, X, LayoutGrid } from 'lucide-react';
 import type { User } from '../types';
 
 interface NavbarProps {
@@ -9,8 +9,8 @@ interface NavbarProps {
   onLogout: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  activeTab: 'home' | 'profile';
-  onTabChange: (tab: 'home' | 'profile') => void;
+  activeTab: 'landing' | 'feed' | 'profile';
+  onTabChange: (tab: 'landing' | 'feed' | 'profile') => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -45,12 +45,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           height: 64,
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          gap: 16,
         }}
       >
-        {/* Wordmark */}
+        {/* Brand Mark & Wordmark */}
         <button
-          onClick={() => onTabChange('home')}
+          onClick={() => onTabChange('landing')}
           style={{
             background: 'none',
             border: 'none',
@@ -59,49 +59,88 @@ export const Navbar: React.FC<NavbarProps> = ({
             flexShrink: 0,
             display: 'flex',
             alignItems: 'center',
-            gap: 8,
+            gap: 10,
           }}
+          title="Atelier Home"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)">
-            <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.29.14-.62.92-3.86.92-3.86s-.23-.47-.23-1.17c0-1.1.64-1.92 1.44-1.92.68 0 1 .5 1 1.12 0 .68-.43 1.7-.66 2.64-.19.79.4 1.44 1.18 1.44 1.42 0 2.5-1.5 2.5-3.66 0-1.91-1.38-3.25-3.34-3.25-2.45 0-3.88 1.83-3.88 3.73 0 .74.28 1.53.64 1.96a.35.35 0 0 1 .08.34c-.09.37-.29 1.17-.33 1.33-.05.22-.17.27-.4.16-1.5-.7-2.43-2.88-2.43-4.64 0-3.77 2.74-7.24 7.9-7.24 4.15 0 7.37 2.96 7.37 6.91 0 4.12-2.6 7.44-6.2 7.44-1.21 0-2.35-.63-2.74-1.38l-.75 2.85c-.27 1.04-1 2.35-1.49 3.15A12 12 0 1 0 12 0z" />
-          </svg>
+          {/* Atelier Minimalist Geometric Mark */}
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 8,
+              background: 'var(--ink)',
+              color: 'var(--ground)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 700,
+              fontSize: 15,
+              fontFamily: 'var(--font-serif)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            A
+          </div>
+
           <span
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: 700,
               color: 'var(--ink)',
               letterSpacing: '-0.02em',
               lineHeight: 1,
             }}
           >
-            Pintrest
-            <span style={{ color: 'var(--accent)', marginLeft: 2 }}>AI</span>
+            Atelier
           </span>
         </button>
 
-        {/* Nav tabs */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {/* Primary Navigation Tabs */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <button
-            onClick={() => onTabChange('home')}
+            onClick={() => onTabChange('landing')}
             style={{
-              background: activeTab === 'home' ? 'var(--ink)' : 'transparent',
-              color: activeTab === 'home' ? 'var(--ground)' : 'var(--ink-secondary)',
+              background: activeTab === 'landing' ? 'var(--ink)' : 'transparent',
+              color: activeTab === 'landing' ? 'var(--ground)' : 'var(--ink-secondary)',
               border: 'none',
               borderRadius: 'var(--radius-pill)',
-              padding: '7px 16px',
-              fontSize: 14,
-              fontWeight: 500,
+              padding: '7px 15px',
+              fontSize: 13,
+              fontWeight: 600,
               cursor: 'pointer',
-              transition: `background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease)`,
+              transition: `all var(--dur-fast) var(--ease)`,
               display: 'flex',
               alignItems: 'center',
               gap: 6,
             }}
           >
-            <Grid3X3 size={15} />
-            Feed
+            <Sparkles size={14} />
+            <span>Overview</span>
           </button>
+
+          <button
+            onClick={() => onTabChange('feed')}
+            style={{
+              background: activeTab === 'feed' ? 'var(--ink)' : 'transparent',
+              color: activeTab === 'feed' ? 'var(--ground)' : 'var(--ink-secondary)',
+              border: 'none',
+              borderRadius: 'var(--radius-pill)',
+              padding: '7px 15px',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: `all var(--dur-fast) var(--ease)`,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <LayoutGrid size={14} />
+            <span>Collection</span>
+          </button>
+
           {user && (
             <button
               onClick={() => onTabChange('profile')}
@@ -110,29 +149,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                 color: activeTab === 'profile' ? 'var(--ground)' : 'var(--ink-secondary)',
                 border: 'none',
                 borderRadius: 'var(--radius-pill)',
-                padding: '7px 16px',
-                fontSize: 14,
-                fontWeight: 500,
+                padding: '7px 15px',
+                fontSize: 13,
+                fontWeight: 600,
                 cursor: 'pointer',
-                transition: `background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease)`,
+                transition: `all var(--dur-fast) var(--ease)`,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
               }}
             >
-              Profile
+              <UserIcon size={14} />
+              <span>Studio</span>
             </button>
           )}
         </nav>
 
-        {/* Search — expands on focus */}
+        {/* Search Bar */}
         <div
           style={{
             flex: 1,
             position: 'relative',
-            maxWidth: searchFocused ? 480 : 360,
+            maxWidth: searchFocused ? 440 : 320,
             transition: `max-width var(--dur-mid) var(--ease)`,
+            marginLeft: 'auto',
           }}
         >
           <Search
-            size={15}
+            size={14}
             style={{
               position: 'absolute',
               left: 14,
@@ -145,20 +189,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e) => {
+              onSearchChange(e.target.value);
+              if (activeTab === 'landing' && e.target.value.trim()) {
+                onTabChange('feed');
+              }
+            }}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            placeholder="Search pins, creators…"
+            placeholder="Search visual archive…"
             style={{
               width: '100%',
               background: searchFocused ? 'var(--surface-card)' : 'var(--surface-raised)',
               border: searchFocused ? '1.5px solid var(--ink)' : '1.5px solid transparent',
               borderRadius: 'var(--radius-pill)',
-              padding: '8px 36px 8px 38px',
-              fontSize: 14,
+              padding: '8px 32px 8px 36px',
+              fontSize: 13,
               color: 'var(--ink)',
               outline: 'none',
-              transition: `background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)`,
+              transition: `all var(--dur-fast) var(--ease)`,
               fontFamily: 'var(--font-sans)',
             }}
           />
@@ -184,8 +233,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
         </div>
 
-        {/* Right actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        {/* Right Action Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {user && (
             <button
               onClick={onOpenCreate}
@@ -201,14 +250,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: 6,
-                transition: `background var(--dur-fast) var(--ease)`,
                 letterSpacing: '0.01em',
+                transition: 'background var(--dur-fast) var(--ease)',
               }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--ink-secondary)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'var(--ink)')}
             >
               <Plus size={15} />
-              Create
+              <span>New Entry</span>
             </button>
           )}
 
@@ -286,7 +335,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                   >
                     <UserIcon size={15} />
-                    Your Profile
+                    My Studio
                   </button>
                   <button
                     onClick={() => { onLogout(); setShowMenu(false); }}
@@ -321,8 +370,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 border: 'none',
                 borderRadius: 'var(--radius-pill)',
                 padding: '8px 20px',
-                fontSize: 14,
-                fontWeight: 600,
+                fontSize: 13,
+                fontWeight: 700,
                 cursor: 'pointer',
                 transition: `background var(--dur-fast) var(--ease)`,
                 letterSpacing: '0.01em',
@@ -330,7 +379,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-deep)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'var(--accent)')}
             >
-              Log in
+              Sign In
             </button>
           )}
         </div>
