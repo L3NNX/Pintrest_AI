@@ -1,6 +1,6 @@
 ---
-name: Pintrest AI
-description: Self-hosted visual inspiration board with AI-powered tagging and Cloudflare R2 edge delivery.
+name: Atelier
+description: Self-hosted visual studio and archive for creative collectors with Cloudflare R2 edge storage.
 colors:
   ground: "#faf8f4"
   ground-hover: "#f3f0eb"
@@ -80,13 +80,13 @@ components:
     rounded: "20px"
 ---
 
-# Design System: Pintrest AI
+# Design System: Atelier
 
 ## Overview
 
 **Creative North Star: "The Editorial Magazine Grid"**
 
-Pintrest AI presents itself as a curated visual culture publication — Monocle, Kinfolk, and art catalogue sensibilities brought to a real-time web application. The ground is a warm editorial cream (`#faf8f4`), hairlines dividers (`#e2ddd7`) provide structural poise without heavy borders, and titles are typeset in `Playfair Display`. The Pinterest red (`#e60023`) is preserved strictly as the primary commitment signal: the Save button and Log In CTA.
+Atelier presents itself as a curated visual culture publication — Monocle, Kinfolk, and art catalogue sensibilities brought to a real-time web application. The ground is a warm editorial cream (`#faf8f4`), hairlines dividers (`#e2ddd7`) provide structural poise without heavy borders, and titles are typeset in `Playfair Display`. The action red (`#e60023`) is preserved strictly as the primary commitment signal: the Save button and Sign In CTA.
 
 Surfaces breathe with generous 20–24px card gutters and natural aspect ratios. Modals are designed like gallery spreads with deep contrast and editorial typography.
 

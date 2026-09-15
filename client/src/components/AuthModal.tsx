@@ -107,23 +107,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           <X size={18} />
         </button>
 
-        {/* Brand Icon */}
+        {/* Atelier Monogram */}
         <div
           style={{
             width: 44,
             height: 44,
-            borderRadius: '50%',
-            background: 'var(--surface-raised)',
-            border: '1px solid var(--rule)',
+            borderRadius: 12,
+            background: 'var(--ink)',
+            color: 'var(--ground)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 16px',
+            fontFamily: 'var(--font-serif)',
+            fontSize: 22,
+            fontWeight: 700,
           }}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)">
-            <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.29.14-.62.92-3.86.92-3.86s-.23-.47-.23-1.17c0-1.1.64-1.92 1.44-1.92.68 0 1 .5 1 1.12 0 .68-.43 1.7-.66 2.64-.19.79.4 1.44 1.18 1.44 1.42 0 2.5-1.5 2.5-3.66 0-1.91-1.38-3.25-3.34-3.25-2.45 0-3.88 1.83-3.88 3.73 0 .74.28 1.53.64 1.96a.35.35 0 0 1 .08.34c-.09.37-.29 1.17-.33 1.33-.05.22-.17.27-.4.16-1.5-.7-2.43-2.88-2.43-4.64 0-3.77 2.74-7.24 7.9-7.24 4.15 0 7.37 2.96 7.37 6.91 0 4.12-2.6 7.44-6.2 7.44-1.21 0-2.35-.63-2.74-1.38l-.75 2.85c-.27 1.04-1 2.35-1.49 3.15A12 12 0 1 0 12 0z" />
-          </svg>
+          A
         </div>
 
         <h2
@@ -135,10 +136,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
             margin: 0,
           }}
         >
-          {isRegister ? 'Join Pintrest AI' : 'Welcome back'}
+          {isRegister ? 'Join Atelier' : 'Welcome to Atelier'}
         </h2>
         <p style={{ fontSize: 13, color: 'var(--ink-secondary)', marginTop: 4, marginBottom: 0 }}>
-          {isRegister ? 'Create an account to save & curate visual ideas' : 'Sign in to access your personal board'}
+          {isRegister ? 'Create an account to curate your visual archive' : 'Sign in to access your personal collection'}
         </p>
 
         {error && (

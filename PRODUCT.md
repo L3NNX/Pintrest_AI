@@ -12,11 +12,11 @@ Hobbyists and creatives who want to discover, save, and share visual inspiration
 
 ## Product Purpose
 
-Pintrest AI is a self-hosted visual inspiration board with AI-powered enhancement. It lets users browse a masonry feed of pins, upload images directly to Cloudflare R2 storage, like and save pins, and manage a personal profile. AI features (auto-tagging, smart captions) add discoverability and reduce friction at upload time. Success means a feed that loads fast, looks beautiful, and makes uploading effortless.
+Atelier is an independent, self-hosted visual studio and archive for creative collectors. It lets curators discover and archive photographic studies, architecture, and graphic arts, stream uploads directly to Cloudflare R2 edge storage, organize personal boards, and manage a studio profile. Success means an interface with high-craft restraint that recedes and lets the visual work lead.
 
 ## Positioning
 
-AI-powered auto-tagging and smart captions at upload time, Cloudflare R2 for zero-egress global image delivery, and a fully self-hosted open architecture — things the real Pinterest cannot offer to developers who want control.
+Editorial craft and private collection focus over algorithmic noise. Direct-to-R2 edge streaming for zero-egress worldwide distribution, combined with visual intelligence and an open self-hosted architecture.
 
 ## Operating Context
 
@@ -41,9 +41,10 @@ AI-powered auto-tagging and smart captions at upload time, Cloudflare R2 for zer
 
 ## Brand Commitments
 
-- Product name: **Pintrest AI**
-- No inherited visual constraints — greenfield visual identity
-- The existing red (#e60023) in the codebase is a starting point, not a lock
+- Product name: **Atelier**
+- Visual world: **The Editorial Magazine Grid** (warm cream `#faf8f4`, hairline dividers `#e2ddd7`, Playfair Display serif typography)
+- Monogram: Geometric studio mark "A" in warm ink
+- Action accent: `#e60023` reserved strictly for commitment moments (Save, Sign In)
 
 ## Evidence on Hand
 
