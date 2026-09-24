@@ -21,3 +21,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
 }
+
+/* Smooth image scale on hover */
+.pin-card-img {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pin-card-img:hover {
+  transform: scale(1.02);
+}
