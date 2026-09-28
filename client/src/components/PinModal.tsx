@@ -17,8 +17,18 @@ export const PinModal: React.FC<PinModalProps> = ({ pin, onClose, onLike, curren
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+
+    if (pin) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [pin, onClose]);
 
   if (!pin) return null;
 
